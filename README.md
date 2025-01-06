@@ -57,7 +57,7 @@ Test project /home/user/Documents/thread-pool/build
 Total Test time (real) =   4.02 sec
 ```
 
-## Mermaid diagram
+## High level design
 
 ```mermaid
 classDiagram
