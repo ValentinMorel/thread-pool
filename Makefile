@@ -1,6 +1,6 @@
 BUILD_DIR = build
 EXECUTABLE = thread_pool
-TEST_EXECUTABLE = tests
+TEST_EXECUTABLE = ctest
 
 all: build run
 
@@ -12,7 +12,7 @@ run: build
 	./$(BUILD_DIR)/$(EXECUTABLE)
 
 test: build
-	./$(BUILD_DIR)/$(TEST_EXECUTABLE)
+	cd build && $(TEST_EXECUTABLE)
 
 clean:
 	rm -rf $(BUILD_DIR)
