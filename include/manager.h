@@ -20,6 +20,6 @@ public:
 
 private:
     LockFreeQueue<std::shared_ptr<ITask>> taskQueue;
-    std::vector<std::thread> workers;
+    std::vector<std::pair<int, std::thread>> workers; 
     std::atomic<bool> stop;
 };
