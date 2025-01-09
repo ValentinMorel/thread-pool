@@ -12,6 +12,14 @@ void Task::execute() {
     log("Completed task: " + name);
 }
 
-void Task::log(const std::string& message) const {
+void Task::log(const std::string& message) {
     std::cout << "[LOG] " << message << std::endl;
+}
+
+std::string Task::getName() const {
+    return name;
+}
+
+int Task::getDuration() const {
+    return duration;
 }

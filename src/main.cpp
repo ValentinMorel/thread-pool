@@ -1,15 +1,16 @@
+#include <QApplication>
 #include "manager.h"
-#include "task.h"
+#include "gui.h"
 
-int main(){
+int main(int argc, char* argv[]) {
+    QApplication app(argc, argv);
 
-  TaskManager manager(4);
+    // Create a TaskManager with a pool of 4 threads
+    TaskManager taskManager(4);
 
-  manager.addTask(std::make_shared<Task>("Task1", 2));
-  manager.addTask(std::make_shared<Task>("Task2", 3));
-  manager.addTask(std::make_shared<Task>("Task3", 1));
-  manager.addTask(std::make_shared<Task>("Task4", 4));
-  manager.addTask(std::make_shared<Task>("Task5", 2));
-  manager.addTask(std::make_shared<Task>("Task6", 3));
-  return 0;
+    // Create the TaskMonitor GUI
+    TaskMonitor taskMonitor(&taskManager);
+    taskMonitor.show();
+
+    return app.exec();
 }

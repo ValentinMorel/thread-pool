@@ -1,5 +1,6 @@
+#include <QString>
 #include "manager.h"
-
+#include <future>
 
 TaskManager::TaskManager(size_t threadCount) : stop(false) {
   workers.reserve(threadCount);
@@ -11,7 +12,7 @@ TaskManager::TaskManager(size_t threadCount) : stop(false) {
                   task.value()->execute();
               }
           }
-          log("Worker " + std::string_to(i) + " stopping...");
+          log("Worker " + std::to_string(i) + " stopping...");
       }));
   }
 }
@@ -38,6 +39,43 @@ TaskManager::~TaskManager() {
     }
 }
 
-void TaskManager::log(const std::string& message) const {
-    std::cout << "[TaskManager LOG] " << message << std::endl;
+
+void TaskManager::log(const std::string& message) {
+    emit logMessage(QString::fromStdString("[TaskManager LOG] " + message));
 }
+
+std::vector<std::tuple<std::string, int, std::string>> TaskManager::getTaskStatuses() {
+    std::vector<std::tuple<std::string, int, std::string>> statuses;
+
+    LockFreeQueue<std::shared_ptr<ITask>> tempQueue;
+    while (auto task = taskQueue.pop()) {
+        if (task) {
+            statuses.emplace_back(task->get()->getName(), task->get()->getDuration(), "Pending");
+            tempQueue.push(task.value()); // Push back to a temporary queue
+        }
+    }
+
+    // Restore original queue
+    while (auto task = tempQueue.pop()) {
+        taskQueue.push(task.value());
+    }
+
+    return statuses;
+}
+
+void TaskManager::startExecution() {
+
+}
+
+
+void TaskManager::cancelExecution() {
+    stop.store(true); // Signal threads to stop
+    log("Task execution canceled.");
+
+    for (auto& [id, worker] : workers) {
+        if (worker.joinable()) {
+            worker.join();
+        }
+    }
+}
+

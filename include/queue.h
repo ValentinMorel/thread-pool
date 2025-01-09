@@ -23,6 +23,14 @@ public:
     void push(T value);
     std::optional<T> pop();
 
+    template <typename Func>
+    void forEach(Func func) {
+        Node<T>* current = head.load()->next; // Start from the first actual node
+        while (current) {
+            func(current->data);
+            current = current->next;
+        }
+    }
 private:
     std::atomic<Node<T>*> head;
     std::atomic<Node<T>*> tail;
