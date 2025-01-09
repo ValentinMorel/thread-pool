@@ -11,7 +11,7 @@ TaskManager::TaskManager(size_t threadCount) : stop(false) {
                   task.value()->execute();
               }
           }
-          log("Worker " + std::string_to(i) + " stopping...");
+          log("Worker " + std::to_string(i) + " stopping...");
       }));
   }
 }
