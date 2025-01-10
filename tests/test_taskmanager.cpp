@@ -6,7 +6,7 @@
 
 
 TEST(TaskManagerTests, AddTasks) {
-    TaskManager manager(2); 
+    TaskManager manager(2, 4); 
 
     EXPECT_NO_THROW(manager.addTask(std::make_shared<Task>("Task1", 2)));
     EXPECT_NO_THROW(manager.addTask(std::make_shared<Task>("Task2", 3)));
@@ -14,7 +14,7 @@ TEST(TaskManagerTests, AddTasks) {
 }
 
 TEST(TaskManagerTests, TaskExecution) {
-    TaskManager manager(2); 
+    TaskManager manager(2, 4); 
 
     manager.addTask(std::make_shared<Task>("Task1", 1));
     manager.addTask(std::make_shared<Task>("Task2", 2));
@@ -25,7 +25,7 @@ TEST(TaskManagerTests, TaskExecution) {
 }
 
 TEST(TaskManagerTests, LargeTaskLoad) {
-    TaskManager manager(4);
+    TaskManager manager(4, 8);
     const int numTasks = 20;
 
     for (int i = 0; i < numTasks; ++i) {
@@ -38,7 +38,7 @@ TEST(TaskManagerTests, LargeTaskLoad) {
   }
 
 TEST(TaskManagerTests, NullTaskHandling) {
-    TaskManager manager(2);
+    TaskManager manager(2, 6);
 
     EXPECT_THROW(manager.addTask(nullptr), std::invalid_argument);
 }
