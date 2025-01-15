@@ -1,28 +1,41 @@
-#include "manager.h"
-#include <memory>
-#include <thread>
-#include <chrono>
+#include "routines.h"
+#include "channel.h"
+#include "logger.h"
 
 
-std::unique_ptr<TaskManager> taskManager;
-
+void consumer(Channel<int>& channel) {
+    while (true) {
+        auto value = channel.receive();
+        if (!value.has_value()) {
+            break; 
+        }
+        Logger::log("Received: " + std::to_string(value.value()));
+    }
+}
 
 int main() {
-    // Initialize the TaskManager
-    taskManager = std::make_unique<TaskManager>(4, 8); // 4 initial threads, max 8 threads
-    // Add tasks
-    taskManager->addTask(std::make_shared<Task>("Task1", 2));
-    taskManager->addTask(std::make_shared<Task>("Task2", 3));
-    taskManager->addTask(std::make_shared<Task>("Task3", 1));
-    taskManager->addTask(std::make_shared<Task>("Task4", 4));
-    taskManager->addTask(std::make_shared<Task>("Task5", 4));
+    Logger logger;
+    Routines routines(8); // 4 worker threads
+
+    Channel<int> channel;
+
+    Logger::log("Starting consumer routine...");
+    routines.go(consumer, std::ref(channel));
+
+    Logger::log("Sending values to the channel...");
+
+    channel.send(1);
+    channel.send(2);
+    channel.send(3);
+    channel.send(4);
+    channel.send(5);
 
 
-    // Keep the program alive until the TaskManager is stopped
-    while (!taskManager->isStopped()) {
-        std::this_thread::sleep_for(std::chrono::seconds(2));
-    }
-    taskManager.reset();
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    Logger::log("Closing the channel...");
+    channel.close();
 
+
+    routines.shutdown();
     return 0;
 }

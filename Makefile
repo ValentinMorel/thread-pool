@@ -1,14 +1,13 @@
 BUILD_DIR = build
 EXECUTABLE = thread_pool
-TEST_EXECUTABLE = ctest
+TEST_EXECUTABLE = ctest --verbose
 
 all: build run
 
 build:
-	cmake -B $(BUILD_DIR) -S .
-	cmake --build $(BUILD_DIR)
+	mkdir -p $(BUILD_DIR) && cd ${BUILD_DIR} && cmake .. && make
 
-run: build
+run: 
 	./$(BUILD_DIR)/$(EXECUTABLE)
 
 test: build
