@@ -2,14 +2,13 @@
 
 ## Overview
 
-This project implements a thread pool using C++17, providing task management and logging functionality. It includes a `TaskManager` to manage multiple tasks and a `Task` class to represent individual units of work. The project is designed to demonstrate multithreading concepts and can be extended for real-world applications.
+This project implements a thread pool using C++17, providing Golang like goroutines. (At least an attempt)
 
 ---
 
 ## Features
 
 - **Thread Pool**: Efficiently manage a fixed number of threads to execute tasks concurrently.
-- **Task Management**: Add tasks dynamically, each with a unique name and duration.
 - **Logging**: Track task execution with detailed logs.
 - **Unit Testing**: Comprehensive tests using Google Test (GTest).
 
@@ -49,70 +48,38 @@ This project implements a thread pool using C++17, providing task management and
 
 ```bash
 Test project /home/user/Documents/thread-pool/build
-    Start 1: TaskManagerTests
-1/1 Test #1: TaskManagerTests .................   Passed    4.01 sec
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: RoutinesTests
+
+1: Test command: /home/user/Documents/thread-pool/build/tests "--gtest_color=yes" "--gtest_output=console" "--gtest_catch_exceptions=0"
+1: Test timeout computed to be: 10000000
+1: 
+1: [WARNING] /build/googletest-j5yxiC/googletest-1.10.0/googletest/src/gtest.cc:5080:: WARNING: unrecognized output format "console" ignored.
+1: [==========] Running 3 tests from 1 test suite.
+1: [----------] Global test environment set-up.
+1: [----------] 3 tests from RoutinesTests
+1: [ RUN      ] RoutinesTests.AddTasks
+1: [       OK ] RoutinesTests.AddTasks (0 ms)
+1: [ RUN      ] RoutinesTests.TaskExecution
+1: [       OK ] RoutinesTests.TaskExecution (2001 ms)
+1: [ RUN      ] RoutinesTests.LargeTaskLoad
+1: [       OK ] RoutinesTests.LargeTaskLoad (5000 ms)
+1: [----------] 3 tests from RoutinesTests (7001 ms total)
+1: 
+1: [----------] Global test environment tear-down
+1: [==========] 3 tests from 1 test suite ran. (7001 ms total)
+1: [  PASSED  ] 3 tests.
+1/1 Test #1: RoutinesTests ....................   Passed    7.01 sec
 
 100% tests passed, 0 tests failed out of 1
 
-Total Test time (real) =   4.02 sec
-```
-
-## High level design
-
-```mermaid
-classDiagram
-    %% Task class details
-    class Task {
-        +name: string
-        +duration: int
-        +execute(): void
-        +log(message: string): void
-    }
-
-    %% TaskManager class details
-    class TaskManager {
-        +numThreads: int
-        +tasks: LockFreeQueue
-        +addTask(task: Task): void
-        +start(): void
-        +log(message: string): void
-        +~TaskManager()
-    }
-
-    %% LockFreeQueue class details
-    class LockFreeQueue {
-        +head: atomic<Node>
-        +tail: atomic<Node>
-        +push(value: Task): void
-        +pop(): Task
-    }
-
-    %% Node class details
-    class Node {
-        +data: Task
-        +next: atomic<Node>
-        +Node(value: Task)
-    }
-
-    %% Interfaces
-    class ILogger {
-        <<interface>>
-        +log(message: string): void
-    }
-
-    class ITask {
-        <<interface>>
-        +execute(): void
-    }
-
-    %% Relationships
-    TaskManager "1" --> "1" LockFreeQueue : uses
-    LockFreeQueue "1" --> "n" Node : consists of
-    Node --> "1" Task : stores
-    TaskManager --> ILogger : logs
-    Task --> ILogger : logs
-    TaskManager --> ITask : executes
-    Task --> ITask : executes
+Total Test time (real) =   7.02 sec
 ```
 
 
